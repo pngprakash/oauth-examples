@@ -1,34 +1,19 @@
 require 'sinatra'
-require 'omniauth'
 require 'omniauth-asana'
-require "ostruct"
+require 'ostruct'
+
+set :port, ENV['PORT']
 
 use Rack::Session::Cookie
 use OmniAuth::Builder do
   provider :asana, ENV['ASANA_CLIENT_ID'], ENV['ASANA_CLIENT_SECRET']
 end
 
-helpers do
-  def auth
-    @auth ||= session[:auth]
-  end
-
-  def logged_in
-    !!auth
-  end
-
-  def current_user
-    return nil unless logged_in
-
-    @current_user ||= OpenStruct.new(session[:user])
-  end
-end
-
 get '/' do
-  if logged_in
+  if session[:auth]
     <<-HTML
-    Welcome, #{current_user.name}!
-    Your token is #{auth.token}, your id is #{session[:uid]}
+    Welcome, #{session[:user][:name]}!
+    Your token is #{session[:auth].token}, your id is #{session[:uid]}
     <a href='/logout'>Logout</a>
     HTML
   else
@@ -47,7 +32,6 @@ get '/auth/:name/callback' do
 end
 
 get '/auth/failure' do
-  logger.info params
   raise StandardError, params
 end
 
