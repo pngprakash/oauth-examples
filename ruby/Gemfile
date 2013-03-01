@@ -2,7 +2,7 @@
 source "https://rubygems.org"
 
 gem "sinatra"
-gem "omniauth-asana", path: "../../omniauth-asana"
+gem "omniauth-asana"
 
 group :development do
   gem "pry"
