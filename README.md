@@ -30,6 +30,38 @@ To actually run an app (e.g. the ruby example) you would type:
 
 Every example will be run with the same command: `./start $SUBDIR`.
 
+## Under the hood
+
+So how does OAuth with Asana work exactly? What is it these examples do, and how precisely would you implement it yourself?
+
+Obviously, a working knowledge of the OAuth 2.0 spec (we're using [Draft 31](http://tools.ietf.org/html/draft-ietf-oauth-v2-31)) is useful. If you're familiar with the spec — or intend to use an out-of-the-box OAuth 2.0 library rather than hand-coding it — all you need to know is this:
+
+### Quick Reference
+
+1. The endpoint for user authorization is `http://app.asana.com/-/oauth_authorize`
+2. The endpoint for token exchange is `http://app.asana.com/-/oauth_token`
+3. Applications can be created from the "Apps" tab of your account settings, where you will find your Client ID and Client Secret.
+4. We support both the Authorization Code Grant flow, and the Implicit Grant flow.
+
+### Authorization Code Grant
+
+To actually implement the Authorization Code Grant flow (the most typical flow for most applications), there are basically three steps:
+
+1. Redirect a user to the authorization endpoint so that they can approve access of your app to their Asana account
+2. Receive a redirect back from the authorization endpoint with a **code** embedded in the parameters
+3. Exchange the code for a **token** via the token exchange endpoint
+
+The token that you have at the end can be used to make calls to the Asana API on the authorizing user's behalf.
+
+### Implicit Grant
+
+The implement the Implicit Grant flow, which is suitable for in-browser web apps in JavaScript or other applications that might have difficulty making arbitrary HTTP POST requests to the token exchange endpoint, there are only two steps:
+
+1. Redirect a user to the authorization endpoint so that they can approve access of your app to their Asana account
+2. Receive a redirect back from the authorization endpoint with a **token** embedded in the *fragment* portion (the bit following the `#`) of the URL.
+
+This token can then be used to access the API, in this case typically using JSONP.
+
 ## Feedback
 
 Please send any feedback to ...
