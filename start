@@ -3,6 +3,11 @@
 
 set -e
 
+if [ ! -f .env ]
+then echo "Could not find a .env file, copying .env.example"
+  cp .env.example .env
+fi
+
 source .env
 export ASANA_CLIENT_ID
 export ASANA_CLIENT_SECRET
@@ -12,7 +17,7 @@ if [ "$ASANA_CLIENT_ID" -a "$ASANA_CLIENT_SECRET" ]; then
   ./start.sh
 else
   echo "You must specify ASANA_CLIENT_ID and ASANA_CLIENT_SECRET in .env to run the examples."
-  echo "Please edit .env and specify the client ID and secret you got from the page at https://app.asana.com/-/account_api under 'Details' for the app you wish to use."
+  echo "Please edit .env and specify the client ID and secret. More details and help are available in the .env.example file, and the README."
   exit 1
 fi
 

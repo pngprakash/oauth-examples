@@ -20,15 +20,15 @@ Visit [the Apps tab of your Account Settings in Asana](https://app.asana.com/-/a
 
 ### Starting the app
 
-Edit the `.env` file and enter your client ID and secret key, which you obtained in the previous step.
+Edit the `.env` file and enter your client ID and secret key, which you obtained in the previous step. (You can also change the port that the process will run on, default 5000).
 
 To actually run an app (e.g. the ruby example) you would type:
 
 ```bash
-ruby/start.sh
+./start ruby
 ```
 
-Every example will be run with the same command: `$SUBDIR/start.sh`.
+Every example will be run with the same command: `./start $SUBDIR`.
 
 ## Feedback
 
