@@ -1,0 +1,18 @@
+#!/bin/bash
+#set:ft=bash
+
+set -e
+
+source .env
+export ASANA_CLIENT_ID
+export ASANA_CLIENT_SECRET
+export PORT
+if [ "$ASANA_CLIENT_ID" -a "$ASANA_CLIENT_SECRET" ]; then
+  cd $1
+  ./start.sh
+else
+  echo "You must specify ASANA_CLIENT_ID and ASANA_CLIENT_SECRET in .env to run the examples."
+  echo "Please edit .env and specify the client ID and secret you got from the page at https://app.asana.com/-/account_api under 'Details' for the app you wish to use."
+  exit 1
+fi
+

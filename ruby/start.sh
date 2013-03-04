@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd `dirname $0` &&
-  echo "Installing bundle" &&
+echo "Installing bundle" &&
   bundle --quiet &&
+  echo "Starting server" &&
   bundle exec ruby app.rb
