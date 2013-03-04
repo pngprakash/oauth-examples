@@ -38,10 +38,13 @@ Obviously, a working knowledge of the OAuth 2.0 spec (we're using [Draft 31](htt
 
 ### Quick Reference
 
-1. The endpoint for user authorization is `http://app.asana.com/-/oauth_authorize`
-2. The endpoint for token exchange is `http://app.asana.com/-/oauth_token`
-3. Applications can be created from the "Apps" tab of your account settings, where you will find your Client ID and Client Secret.
-4. We support both the Authorization Code Grant flow, and the Implicit Grant flow.
+* The endpoint for user authorization is `https://app.asana.com/-/oauth_authorize`
+* The endpoint for token exchange is `https://app.asana.com/-/oauth_token`
+* Applications can be created from the "Apps" tab of your account settings, where you will find your Client ID and Client Secret. ([Quick Link](https://app.asana.com/-/account_api))
+* We support both the Authorization Code Grant flow, and the Implicit Grant flow.
+* Calls to the API made with the header `Authorization: Bearer $TOKEN` will automatically be authorized to act on behalf of the user.
+
+Note: The currect OAuth implementation does not support scopes or other flows.
 
 ### Authorization Code Grant
 
@@ -61,6 +64,59 @@ The implement the Implicit Grant flow, which is suitable for in-browser web apps
 2. Receive a redirect back from the authorization endpoint with a **token** embedded in the *fragment* portion (the bit following the `#`) of the URL.
 
 This token can then be used to access the API, in this case typically using JSONP.
+
+### User Authorization Endpoint
+
+#### Request
+
+Your app redirects the user to `https://app.asana.com/-/oauth_authorize`, passing parameters along as a standard query string:
+
+* `client_id` - *required* The Client ID uniquely identifies the application making the request.
+* `redirect_uri` - *required* The URI to redirect to on success or error. This *must* match the Redirect URL specified in the application settings.
+* `response_type` - *required* Must be one of either `code` (if using the Authorization Code Grant flow) or `token` (if using the Implicit Grant flow). Other flows are currently not supported.
+* `state` - *optional* Encodes state of the app, which will be returned verbatim in the response and can be used to match the response up to a given request.
+
+#### Response
+
+If either the `client_id` or `redirect_uri` do not match, the user will simply see a plain-text error. Otherwise, all errors will be sent back to the `redirect_uri` specified.
+
+The user then sees a screen giving them the opportunity to accept or reject the request for authorization. In either case, the user will be redirected back to the `redirect_uri`.
+
+If using the `response_type=code`, your app will receive the following parameters in the query string on successful authorization:
+
+* `code` - This is the code your app can exchange for a token
+* `state` - The state parameter that was sent with the authorizing request
+
+If using the `response_type=token`, your app will receive the following parameters in the URL fragment (the bit following the `#`):
+
+* `token` - This is the token your app can use to make requests of the API
+* `state` - The state parameter that was sent with the authorizing request
+
+### Token Exchange Endpoint
+
+#### Request
+
+If your app received a code from the authorization endpoint, it can now be exchanged for a proper token, optionally including a refresh_token, which can be used to request new tokens when the current one expires without needing to redirect or reauthorize the user.
+
+Your app makes a `POST` request to `https://app.asana.com/-/oauth_token`, passing the parameters as part of a standard form-encoded post body.
+
+* `grant_type` - *required* Must be `authorization_code`
+* `client_id` - *required* The Client ID uniquely identifies the application making the request.
+* `client_secret` - *required* The Client Secret belonging to the app, found in the details pane of the developer view
+* `redirect_uri` - *required* Must match the redirect_uri specified in the original request
+* `code` - *required* The code you are exchanging for an auth token
+
+Alternatively, if you are exchanging a refresh_token, the `grant_type` should be `refresh_token` and instead of sending `code=...` you would send `refresh_token=...`.
+
+#### Response
+
+In the response, you will receive a JSON payload with the following parameters:
+
+* `access_token` - The token to use in future requests against the API
+* `expires_in` - The number of seconds the token is valid, typically 3600 (one hour)
+* `token_type` - The type of token, in our case, `bearer`
+* `refresh_token` - If exchanging a code, a long-lived token that can be used to get new access tokens when old ones expire.
+* `user` - A JSON object encoding a few key fields about the logged-in user, currently `id`, `name`, and `email`.
 
 ## Feedback
 
