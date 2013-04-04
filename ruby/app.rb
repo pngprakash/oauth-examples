@@ -3,6 +3,7 @@ require 'omniauth-asana'
 require 'ostruct'
 
 set :port, ENV['PORT']
+set :public_folder, "../public/"
 
 use Rack::Session::Cookie
 use OmniAuth::Builder do
@@ -18,7 +19,8 @@ get '/' do
     HTML
   else
     <<-HTML
-    <a href='/auth/asana'>Sign in with Asana</a>
+    <p>Sinatra demo app for Asana OAuth</p>
+    <a href='/auth/asana'><img src="/asana-oauth-button.png"</a>
     HTML
   end
 end
