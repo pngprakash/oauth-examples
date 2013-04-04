@@ -34,6 +34,12 @@ To actually run an app (e.g. the ruby example) you would type:
 
 Every example will be run with the same command: `./start $SUBDIR`.
 
+## Sign in buttons
+
+If you want to use the same buttons we're using in the examples, feel free! They're located in the `public/` folder of this repo, or you can download them here:
+
+![Sign in with Asana](https://github.com/Asana/oauth-examples/blob/master/public/asana-oauth-button.png?raw=true) ![Sign in with Asana](https://github.com/Asana/oauth-examples/blob/master/public/asana-oauth-button-blue.png?raw=true)
+
 ## Under the hood
 
 So how does OAuth with Asana work exactly? What is it these examples do, and how precisely would you implement it yourself?
