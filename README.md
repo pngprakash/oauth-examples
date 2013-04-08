@@ -130,7 +130,7 @@ In the response, you will receive a JSON payload with the following parameters:
 
 ## Feedback
 
-Please send any feedback to ...
+Please send any feedback or issues to [api-support@asana.com](mailto:api-support@asana.com).
 
 ## MIT License
 
