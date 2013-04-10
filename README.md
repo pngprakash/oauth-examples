@@ -1,8 +1,6 @@
 # OAuth Examples for the Asana API
 
-Examples of how to use OAuth to access the Asana API
-
-Please bear in mind that, while we hope this feature is in a state where the API is stable and safe to develop against, there may be some rough edges. And of course, we may adjust some parts of it to reflect feedback from our early developers. Please direct feedback to support@asana.com.
+Examples of how to use OAuth to access the [Asana API](http://developer.asana.com/documentation/)
 
 ## Running the examples
 
